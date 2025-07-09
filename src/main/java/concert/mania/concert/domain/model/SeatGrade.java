@@ -47,19 +47,7 @@ public class SeatGrade {
                 .count();
     }
 
-    /**
-     * 해당 등급의 판매된 좌석 수 계산
-     * @return 판매된 좌석 수
-     */
-    public int getSoldSeats() {
-        if (seats == null || seats.isEmpty()) {
-            return 0;
-        }
 
-        return (int) seats.stream()
-                .filter(seat -> seat.getStatus() == SeatStatus.SOLD)
-                .count();
-    }
 
 
 }
