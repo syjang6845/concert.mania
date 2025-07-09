@@ -3,20 +3,63 @@ server:
 spring:
   profiles:
     active: dev
-aes:
-  key: saas-project-temp-aeskey #16, 24, 32byte
+  application:
+    name: concert.mania.test
 
-extends:
-  jwt:
-    secret-key: saas-platform-be-userservice # 64 bit length
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus, metrics, env, loggers
+    endpoint:
+      prometheus:
+        enabled: true
+  endpoint:
+    health:
+      show-details: always
+    prometheus:
+      enabled: true
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+      percentiles:
+        http.server.requests: 0.5, 0.9, 0.95, 0.99
+    tags:
+      application: ${spring.application.name}
+
+jwt:
+  access-token-validity: 7200          # 2시간
+  refresh-token-validity: 604800       # 7일
+  refresh-token-cookie-name: "refreshToken"
+  onetime-token-validity: 3600
+
+# 테스트 환경 보안 설정
+aes:
+  key: concert-mania-aeskey-test
 
 security:
   token:
-    hmac-key: saas-project-hash-key
+    hmac-key: concert-mania-hash-key-test
+
+extends:
+  jwt:
+    secret-key: concert-mania-secret-key-test
+
+# Swagger UI 설정
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
+  api-docs:
+    path: /v3/api-docs
+
 logging:
   level:
-    userservice.user.application.service: DEBUG
+    concert.mania.concert: DEBUG
     org.springframework.test: INFO
     org.junit: INFO
+    org.hibernate.SQL: DEBUG
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"

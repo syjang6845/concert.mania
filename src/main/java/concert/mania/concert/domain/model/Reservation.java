@@ -32,6 +32,7 @@ public class Reservation {
     
     // 관계
     private Concert concert; // 예매한 콘서트
+    @Builder.Default
     private List<ReservationDetail> reservationDetails = new ArrayList<>(); // 예매 상세 정보 목록
     private Payment payment; // 결제 정보
     

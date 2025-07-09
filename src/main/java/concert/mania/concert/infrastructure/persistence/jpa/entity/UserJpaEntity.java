@@ -31,21 +31,6 @@ public class UserJpaEntity extends BaseEntity {
     @Column(nullable = false, length = 256)
     private String password;
 
-    @Column(nullable = false, name = "withdraw", length = 1)
-    @Convert(converter = BooleanToYNConverter.class)
-    private boolean withdraw;
-
-
-    // 모든 필드를 받는 생성자 (선택 사항, 매퍼에서 활용 가능)
-    public UserJpaEntity(String name, RoleType role,
-                         String email, String password, boolean withdraw
-                         ) {
-        this.name = name;
-        this.role = role;
-        this.email = email;
-        this.password = password;
-        this.withdraw = withdraw;
-    }
 
     @Override
     public boolean equals(Object o) {

@@ -39,5 +39,6 @@ public class SeatGradeJpaEntity extends BaseEntity {
     
     // 양방향 관계 설정
     @OneToMany(mappedBy = "seatGrade", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Builder.Default
     private List<SeatJpaEntity> seats = new ArrayList<>(); // 해당 등급에 속한 좌석 목록
 }

@@ -51,5 +51,6 @@ public class ReservationJpaEntity extends BaseEntity {
     
     // 양방향 관계 설정
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<ReservationDetailJpaEntity> reservationDetails = new ArrayList<>(); // 예매 상세 정보 목록
 }

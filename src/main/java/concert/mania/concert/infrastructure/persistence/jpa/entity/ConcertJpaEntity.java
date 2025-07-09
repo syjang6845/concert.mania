@@ -54,8 +54,10 @@ public class ConcertJpaEntity extends BaseEntity {
     
     // 양방향 관계 설정
     @OneToMany(mappedBy = "concert", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Builder.Default
     private List<SeatGradeJpaEntity> seatGrades = new ArrayList<>(); // 좌석 등급 목록
     
     @OneToMany(mappedBy = "concert", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @Builder.Default
     private List<SeatJpaEntity> seats = new ArrayList<>(); // 좌석 목록
 }

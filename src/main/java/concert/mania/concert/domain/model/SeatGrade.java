@@ -30,6 +30,7 @@ public class SeatGrade {
 
     // 관계
     private Concert concert; // 연관된 콘서트
+    @Builder.Default
     private List<Seat> seats = new ArrayList<>(); // 해당 등급에 속한 좌석 목록
 
     /**

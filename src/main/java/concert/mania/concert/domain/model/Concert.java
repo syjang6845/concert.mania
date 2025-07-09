@@ -32,7 +32,9 @@ public class Concert {
     private LocalDateTime updatedAt; // 수정 시간
     
     // 관계
+    @Builder.Default
     private List<SeatGrade> seatGrades = new ArrayList<>(); // 좌석 등급 목록
+    @Builder.Default
     private List<Seat> seats = new ArrayList<>(); // 좌석 목록
     
     /**
