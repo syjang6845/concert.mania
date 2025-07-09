@@ -47,20 +47,5 @@ public class Concert {
                now.isAfter(reservationOpenDateTime) && 
                now.isBefore(reservationCloseDateTime);
     }
-    
-    /**
-     * 콘서트가 이미 시작되었는지 확인
-     * @return 시작 여부
-     */
-    public boolean hasStarted() {
-        return LocalDateTime.now().isAfter(startDateTime);
-    }
-    
-    /**
-     * 콘서트가 이미 종료되었는지 확인
-     * @return 종료 여부
-     */
-    public boolean hasEnded() {
-        return LocalDateTime.now().isAfter(endDateTime);
-    }
+
 }

@@ -1,9 +1,8 @@
 package concert.mania.concert.infrastructure.persistence.jpa.entity;
 
+import concert.mania.concert.domain.model.type.RoleType;
 import jakarta.persistence.*;
 import lombok.*;
-import concert.mania.common.converter.BooleanToYNConverter;
-import concert.mania.concert.domain.model.type.RoleType;
 
 import java.util.Objects;
 

@@ -24,7 +24,7 @@ public class ConcertJpaEntity extends BaseEntity {
     @Column(name = "concert_id")
     private Long id; // 콘서트 고유 식별자
     
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String title; // 콘서트 제목
     
     @Column(nullable = false, columnDefinition = "TEXT")
@@ -36,10 +36,10 @@ public class ConcertJpaEntity extends BaseEntity {
     @Column(nullable = false)
     private LocalDateTime endDateTime; // 콘서트 종료 일시
     
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String venue; // 콘서트 개최 장소명
     
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String venueAddress; // 콘서트 개최 장소 주소
     
     @Column(nullable = false)

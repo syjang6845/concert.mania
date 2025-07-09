@@ -61,15 +61,5 @@ public class SeatGrade {
                 .count();
     }
 
-    /**
-     * 해당 등급의 판매율 계산
-     * @return 판매율 (0.0 ~ 1.0)
-     */
-    public double getSalesRate() {
-        if (seats == null || seats.isEmpty() || capacity == 0) {
-            return 0.0;
-        }
 
-        return (double) getSoldSeats() / capacity;
-    }
 }

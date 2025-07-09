@@ -82,14 +82,7 @@ public class Reservation {
         this.cancelledAt = LocalDateTime.now();
     }
     
-    /**
-     * 예매 상세 정보 추가
-     * @param detail 추가할 예매 상세 정보
-     */
-    public void addReservationDetail(ReservationDetail detail) {
-        this.reservationDetails.add(detail);
-    }
-    
+
     /**
      * 총 좌석 수 계산
      * @return 총 좌석 수
