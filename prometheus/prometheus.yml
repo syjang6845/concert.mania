@@ -1,0 +1,36 @@
+# Prometheus configuration
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  # Application monitoring
+  - job_name: 'spring-boot-app'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['java-app:8080']
+
+  # Database monitoring
+  - job_name: 'mysql'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['mysql-exporter:9104']
+
+  # Cache and distributed lock monitoring
+  - job_name: 'redis'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['redis-exporter:9121']
+
+  # Message queue monitoring
+  - job_name: 'rabbitmq'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['rabbitmq-exporter:9419']
+
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    scrape_interval: 15s
+    static_configs:
+      - targets: ['localhost:9090']

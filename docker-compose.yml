@@ -1,0 +1,179 @@
+services:
+  ### MySQL ###
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: concert
+      MYSQL_USER: jsy
+      MYSQL_PASSWORD: 1234
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./sql/concert.sql:/docker-entrypoint-initdb.d/concert.sql
+    networks:
+      - dev_net
+
+  ### MySQL Exporter ###
+  mysql-exporter:
+    image: prom/mysqld-exporter:latest
+    container_name: mysql-exporter
+    restart: always
+    ports:
+      - "9104:9104"
+    command:
+      - "--mysqld.username=jsy:1234"
+      - "--mysqld.address=mysql:3306"
+    depends_on:
+      - mysql
+    networks:
+      - dev_net
+  ### Redis ###
+  redis:
+    image: redis:7
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - dev_net
+
+  ### Redis Exporter ###
+  redis-exporter:
+    image: oliver006/redis_exporter:latest
+    container_name: redis-exporter
+    restart: always
+    ports:
+      - "9121:9121"
+    environment:
+      - REDIS_ADDR=redis://redis:6379
+    depends_on:
+      - redis
+    networks:
+      - dev_net
+
+  ### RabbitMQ (with Management UI) ###
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - dev_net
+
+  ### RabbitMQ Exporter ###
+  rabbitmq-exporter:
+    image: kbudde/rabbitmq-exporter:latest
+    container_name: rabbitmq-exporter
+    restart: always
+    ports:
+      - "9419:9419"
+    environment:
+      - RABBIT_URL=http://rabbitmq:15672
+      - RABBIT_USER=guest
+      - RABBIT_PASSWORD=guest
+    depends_on:
+      - rabbitmq
+    networks:
+      - dev_net
+  ### Prometheus ###
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - dev_net
+  ### Grafana ###
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    depends_on:
+      - prometheus
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+    networks:
+      - dev_net
+  java-app:
+    image: openjdk:21-jdk
+    container_name: java_app
+    restart: unless-stopped
+    volumes:
+      - ./build/libs:/app
+    working_dir: /app
+    command: ["java", "-jar", "concert.mania-1.1.0.jar"]
+    ports:
+      - "8080:8080"
+    environment:
+      # 기본 프로필 설정
+      SPRING_PROFILES_ACTIVE: "local"
+
+      # 애플리케이션 이름
+      SPRING_APPLICATION_NAME: "concert.mania"
+
+      # 데이터베이스 설정
+      DB_HOST: "mysql"
+      DB_PORT: "3306"
+      DB_USERNAME: "jsy"
+      DB_PASSWORD: "1234"
+      DB_USER_URL: "jdbc:mysql://mysql:3306/concert?rewriteBatchedStatements=true&profileSQL=true&logger=Slf4JLogger&maxQuerySizeToLog=999999&useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&useSSL=false"
+
+      # Redis 설정
+      REDIS_HOST: "redis"
+
+      # RabbitMQ 설정
+      RABBITMQ_HOST: "rabbitmq"
+      RABBITMQ_PORT: "5672"
+      RABBITMQ_USERNAME: "guest"
+      RABBITMQ_PASSWORD: "guest"
+
+      # 보안 설정
+      AES_KEY: "concert-mania-aeskey"
+      SECURITY_TOKEN_HMAC_KEY: "concert-mania-hash-key"
+      EXTENDS_JWT_SECRET_KEY: "concert-mania-secret-key"
+
+      # JWT 설정
+      JWT_ACCESS_TOKEN_VALIDITY: "7200"
+      JWT_REFRESH_TOKEN_VALIDITY: "604800"
+      JWT_REFRESH_TOKEN_COOKIE_NAME: "refreshToken"
+      JWT_ONETIME_TOKEN_VALIDITY: "3600"
+
+      # 메트릭 설정
+      MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: "health,info,prometheus,metrics,env,loggers"
+      MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS: "always"
+      MANAGEMENT_ENDPOINT_PROMETHEUS_ENABLED: "true"
+    depends_on:
+      - mysql
+      - redis
+      - rabbitmq
+      - prometheus
+    networks:
+      - dev_net
+
+networks:
+  dev_net:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  redis_data:
+  postgres_data:

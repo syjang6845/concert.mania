@@ -1,0 +1,22 @@
+server:
+  port: 8080
+spring:
+  profiles:
+    active: dev
+aes:
+  key: saas-project-temp-aeskey #16, 24, 32byte
+
+extends:
+  jwt:
+    secret-key: saas-platform-be-userservice # 64 bit length
+
+security:
+  token:
+    hmac-key: saas-project-hash-key
+logging:
+  level:
+    userservice.user.application.service: DEBUG
+    org.springframework.test: INFO
+    org.junit: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"

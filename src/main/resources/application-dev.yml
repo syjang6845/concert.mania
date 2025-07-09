@@ -1,0 +1,71 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_USER_URL:jdbc:mysql://localhost:3306/concert?rewriteBatchedStatements=true&profileSQL=true&logger=Slf4JLogger&maxQuerySizeToLog=999999&useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&useSSL=false}
+    username: ${DB_USERNAME:jsy}
+    password: ${DB_PASSWORD:1234}
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: validate # 운영 시 validate 사용
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy # 강제 UnderScore 설정
+    open-in-view: false
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: 6379
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+    listener:
+      simple:
+        retry:
+          enabled: true
+          initial-interval: 5000
+          max-attempts: 3
+          max-interval: 10000
+          multiplier: 2
+
+# 개발 환경 보안 설정
+aes:
+  key: ${AES_KEY:concert-mania-aeskey-dev}
+security:
+  token:
+    hmac-key: ${HMAC_KEY:concert-mania-hash-key-dev}
+extends:
+  jwt:
+    secret-key: ${JWT_SECRET_KEY:concert-mania-secret-key-dev}
+logging:
+  level:
+    # 'userservice.user' 패키지 및 그 하위 모든 클래스의 로깅 레벨을 TRACE로 설정
+    concert.mania.concert: TRACE
+    root: INFO
+    # 특정 외부 라이브러리의 로깅 레벨을 TRACE로 설정
+    # Spring Security의 상세 동작을 보려면 주로 org.springframework.security를 TRACE로 설정합니다.
+#    org.springframework.security: TRACE
+#    org.springframework.web: TRACE # 웹 요청/응답 상세 로그
+#    org.hibernate: TRACE # JPA/Hibernate 쿼리 및 동작 상세 로그
+#    org.springframework.data: TRACE # Spring Data JPA 상세 로그
+#    org.springframework.jdbc.core: TRACE # JDBC 상세 로그
+#    org.springframework.boot.autoconfigure: TRACE
+#    org.apache.catalina: TRACE # Tomcat 서버 관련 상세 로그
+#    org.apache.ibatis: TRACE # MyBatis 관련 상세 로그 (MyBatis 사용 시)
+
+  # 로깅 파일 설정 (선택 사항)
+#  file:
+#    name: logs/application.log # 로그 파일 경로 및 이름
+#    max-size: 10MB # 파일당 최대 크기
+#    max-history: 7 # 최대 로그 파일 보관 개수
+
+  # 콘솔 출력 패턴 (선택 사항)
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"

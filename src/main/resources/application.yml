@@ -1,0 +1,45 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: concert.mania
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus, metrics, env, loggers
+    endpoint:
+      prometheus:
+        enabled: true
+  endpoint:
+    health:
+      show-details: always
+    prometheus:
+      enabled: true
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+      percentiles:
+        http.server.requests: 0.5, 0.9, 0.95, 0.99
+    tags:
+      application: ${spring.application.name}
+jwt:
+  access-token-validity: 7200          # 15분
+  refresh-token-validity: 604800       # 7일
+  refresh-token-cookie-name: "refreshToken"
+  onetime-token-validity: 3600
+
+# Swagger UI 설정
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
+  api-docs:
+    path: /v3/api-docs
+
