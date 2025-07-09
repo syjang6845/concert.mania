@@ -114,13 +114,9 @@ services:
     networks:
       - dev_net
   java-app:
-    image: openjdk:21-jdk
+    image: concert-mania:1.1.0
     container_name: java_app
     restart: unless-stopped
-    volumes:
-      - ./build/libs:/app
-    working_dir: /app
-    command: ["java", "-jar", "concert.mania-1.1.0.jar"]
     ports:
       - "8080:8080"
     environment:
